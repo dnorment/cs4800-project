@@ -1,0 +1,5 @@
+dialogflow
+flask
+pyngrok
+python-dotenv
+requests
