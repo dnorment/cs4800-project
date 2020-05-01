@@ -24,11 +24,9 @@ def send_message():
     session = session_client.session_path(project_id, "unique")
 
     if message:
-        text_input = dialogflow.types.TextInput(
-            text=message, language_code="en")
+        text_input = dialogflow.types.TextInput(text=message, language_code="en")
         query_input = dialogflow.types.QueryInput(text=text_input)
-        response = session_client.detect_intent(
-            session=session, query_input=query_input)
+        response = session_client.detect_intent(session=session, query_input=query_input)
 
     response_text = { "message":  response.query_result.fulfillment_text }
     return jsonify(response_text)
