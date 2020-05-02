@@ -3,3 +3,4 @@ flask
 pyngrok
 python-dotenv
 requests
+gunicorn
