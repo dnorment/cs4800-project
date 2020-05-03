@@ -1,13 +1,17 @@
 from flask import Flask, request, jsonify
+from flask_swagger_ui import get_swaggerui_blueprint
 import dialogflow
 import os
 
+#Build Flask app
 app = Flask(__name__)
 
+#Home page
 @app.route('/')
 def home():
     return ''
 
+#Webhook endpoint for detecting response in certain intents
 @app.route('/webhook', methods=['POST'])
 def webhook():
     reply = {
@@ -15,6 +19,7 @@ def webhook():
     }
     return jsonify(reply)
 
+#Endpoint for sending message to pass through Dialogflow, returns reply from bot
 @app.route('/send_message', methods=['POST'])
 def send_message():
     message = request.get_json(silent=True)['message']

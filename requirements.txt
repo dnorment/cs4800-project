@@ -1,6 +1,5 @@
 dialogflow
 flask
-pyngrok
+flask_swagger_ui
 python-dotenv
-requests
 gunicorn

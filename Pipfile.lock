@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "045919488546511640b8344ea0ec60d706adb4cb944dc8a84280f624a4fcf14f"
+            "sha256": "970b2c9c3fedf123c9a3cc317fa5326e0e6f0b5f3f263ec1a493fa5f424db2ef"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -59,6 +59,13 @@
             ],
             "index": "pypi",
             "version": "==1.1.2"
+        },
+        "flask-swagger-ui": {
+            "hashes": [
+                "sha256:42d098997e06b04f992609c4945cc990738b269c153d8388fc59a91a5dfcee9e"
+            ],
+            "index": "pypi",
+            "version": "==3.25.0"
         },
         "google-api-core": {
             "extras": [

@@ -8,6 +8,7 @@ verify_ssl = true
 [packages]
 dialogflow = "*"
 flask = "*"
+flask_swagger_ui = "*"
 gunicorn = "*"
 
 [requires]
