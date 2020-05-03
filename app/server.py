@@ -6,6 +6,15 @@ import os
 #Build Flask app
 app = Flask(__name__)
 
+#Setup Swagger URI & config
+swagger_url = '/api/docs'
+api_url = '/static/swagger.json'
+swagger_cfg = {
+    "app_name": "YeetBot"
+}
+blueprint = get_swaggerui_blueprint(swagger_url, api_url, config=swagger_cfg)
+app.register_blueprint(blueprint, url_prefix=swagger_url)
+
 #Home page
 @app.route('/')
 def home():
@@ -20,7 +29,7 @@ def webhook():
     return jsonify(reply)
 
 #Endpoint for sending message to pass through Dialogflow, returns reply from bot
-@app.route('/send_message', methods=['POST'])
+@app.route('/api/send_message', methods=['POST'])
 def send_message():
     message = request.get_json(silent=True)['message']
     project_id = os.getenv('DIALOGFLOW_PROJECT_ID')
