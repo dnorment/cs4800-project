@@ -1,49 +1,54 @@
-from flask import Flask, request, jsonify
-from flask_swagger_ui import get_swaggerui_blueprint
+from flask import Flask
+from flask_restplus import Api, Resource, fields
 import dialogflow
 import os
 
 #Build Flask app
+project_id = os.getenv('DIALOGFLOW_PROJECT_ID')
 app = Flask(__name__)
+api = Api(
+    app=app,
+    doc='/api',
+    version='1.0.0',
+    title='YeetBot API',
+    description='Better than a psychiatrist (not really)'
+)
+ns = api.namespace(name='api')
 
-#Setup Swagger URI & config
-swagger_url = '/api/docs'
-api_url = '/static/swagger.json'
-swagger_cfg = {
-    "app_name": "YeetBot"
-}
-blueprint = get_swaggerui_blueprint(swagger_url, api_url, config=swagger_cfg)
-app.register_blueprint(blueprint, url_prefix=swagger_url)
+message_model = api.model('Message', {
+    'message': fields.String(description='The message to send'),
+    'session_id': fields.String(description='The ID of the session to reply to, each user should have a unique session ID for each new conversation')
+})
+reply_model = api.model('Reply', {
+    'message': fields.String(description='The reply message from YeetBot')
+})
 
-#Home page
-@app.route('/')
-def home():
-    return ''
+@ns.route("/send_message/")
+class SendMessage(Resource):
+    @ns.expect(message_model)
+    @ns.marshal_with(reply_model)
+    def post(self):
+        """
+        Returns a chat response from YeetBot
+        """
+        
+        #Extract data from payload
+        message = api.payload['message']
+        session_id = api.payload['session_id']
 
-#Webhook endpoint for detecting response in certain intents
-@app.route('/webhook', methods=['POST'])
-def webhook():
-    reply = {
-        "fulfillmentText": request.get_json(silent=True)['queryResult']['queryText'],
-    }
-    return jsonify(reply)
+        #Get current Dialogflow session
+        session_client = dialogflow.SessionsClient()
+        session = session_client.session_path(project_id, session_id)
 
-#Endpoint for sending message to pass through Dialogflow, returns reply from bot
-@app.route('/api/send_message', methods=['POST'])
-def send_message():
-    message = request.get_json(silent=True)['message']
-    project_id = os.getenv('DIALOGFLOW_PROJECT_ID')
-
-    session_client = dialogflow.SessionsClient()
-    session = session_client.session_path(project_id, "unique")
-
-    if message:
+        #Send query to Dialogflow
         text_input = dialogflow.types.TextInput(text=message, language_code="en")
         query_input = dialogflow.types.QueryInput(text=text_input)
-        response = session_client.detect_intent(session=session, query_input=query_input)
 
-    response_text = { "message":  response.query_result.fulfillment_text }
-    return jsonify(response_text)
+        #Get response from Dialogflow and parse into custom response JSON
+        result = session_client.detect_intent(session=session, query_input=query_input)
+        response = {
+            "message":  result.query_result.fulfillment_text
+        }
 
-if __name__ == "__main__":
-    app.run(debug=True)
+        #Return reponse on success
+        return response, 200
