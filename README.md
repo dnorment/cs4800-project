@@ -9,12 +9,16 @@ Create a virtual environment (optional, recommended):
 
 ### Using venv & pip
 Run `python -m venv env` or `python3 -m venv env` to create the virtual environment
+
 Activate the virtual environment: 
+
 Windows: Run `env/Scripts/activate.bat` on the command line
+
 Install requirements: `pip install -r requirements.txt`
 
 ### Using pipenv
 Run `pipenv shell` to setup virtual environment and load variables
+
 Install requirements: `pip install -r requirements.txt`
 
 ---
