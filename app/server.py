@@ -6,6 +6,8 @@ import os
 #Build Flask app
 project_id = os.getenv('DIALOGFLOW_PROJECT_ID')
 app = Flask(__name__)
+
+#Set API config
 api = Api(
     app=app,
     doc='/api',
@@ -13,8 +15,11 @@ api = Api(
     title='YeetBot API',
     description='Better than a psychiatrist (not really)'
 )
+
+#Use /api/ namespace for requests
 ns = api.namespace(name='api')
 
+#Model for the format of requests and responses to the API
 message_model = api.model('Message', {
     'message': fields.String(description='The message to send'),
     'session_id': fields.String(description='The ID of the session to reply to, each user should have a unique session ID for each new conversation')
@@ -23,9 +28,10 @@ reply_model = api.model('Reply', {
     'message': fields.String(description='The reply message from YeetBot')
 })
 
+#Add endpoint to API for sending a message
 @ns.route("/send_message/")
 class SendMessage(Resource):
-    @ns.expect(message_model)
+    @ns.expect(message_model) #Expect requests adhere to the message model
     @ns.marshal_with(reply_model)
     def post(self):
         """

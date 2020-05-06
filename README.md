@@ -1,23 +1,25 @@
-# Installation
+# YeetBot
 
-Create a virtual environment: 
+YeetBot is a psychiatry chatbot created using Google's Dialoglow. Our project creates a server with a RESTful API to serve any requests and responses to and from Dialogflow without all the necessary dependencies and authentications.
 
-`python -m venv env` OR `python3 -m venv env`
+---
+# Install
 
+Create a virtual environment (optional, recommended): 
+
+### Using venv & pip
+Run `python -m venv env` or `python3 -m venv env` to create the virtual environment
 Activate the virtual environment: 
-
-Windows: `env/Scripts/activate.bat`
-
-Linux: `source env/bin/activate`
-
+Windows: Run `env/Scripts/activate.bat` on the command line
 Install requirements: `pip install -r requirements.txt`
 
+### Using pipenv
+Run `pipenv shell` to setup virtual environment and load variables
+Install requirements: `pip install -r requirements.txt`
+
+---
 # Execution
 
-Run `flask run` in the root directory
+Run `flask run` in the root directory to run the server on localhost:5000
 
-Flask will run the server on port 5000, which needs to be exposed to use DialogFlow callbacks
-
-Run `ngrok http 5000` in the root directory
-
-Edit DialogFlow fulfillment webhook to be the ngrok address from last step
+Deploying to Heroku will work using the Procfile & Pipfile.lock
